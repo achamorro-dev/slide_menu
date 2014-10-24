@@ -42,7 +42,7 @@ function ApplicationWindow(osname){
 		}),
 		iconHeader = Ti.UI.createButton({
 			backgroundImage: '/images/menu.png',
-			left: -10,
+			left: 10,
 			width: 30
 		}),
 		titleHeader = Ti.UI.createLabel({
@@ -51,7 +51,7 @@ function ApplicationWindow(osname){
 				fontSize: '20dp',
 				fontFamily: 'Roboto-Light'
 			},
-			left: 20,
+			left: '50',
 			text: 'App title',
 			textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT
 		}),
@@ -87,6 +87,10 @@ function ApplicationWindow(osname){
 			width: 'auto'
 		}),
 		menuRows = [];
+		
+	self.addEventListener('swipe',function(e){
+		clickMenu(e.direction);
+	});
 		
 	//Adding menu options
 	for(x in menuItems){
@@ -143,14 +147,19 @@ function ApplicationWindow(osname){
 	
 	//EVENTS AND FUNCTIONS
 	//Toogle menu
+	
 	menuLauncher.addEventListener('click',function(event){
+		clickMenu(null);
+	});
+	
+	function clickMenu(direction){
 		menuLauncher.animate({
 		    backgroundColor: secondColor,
 		    duration : 200,
 		    autoreverse : true,
 	    });
 		//Menu is hidden
-		if(menuView._toggle === false){
+		if(menuView._toggle === false && (direction==null || direction=='right')){
 			iconHeader.animate({
 				left: -15,
 				duration: 200
@@ -161,19 +170,20 @@ function ApplicationWindow(osname){
 				curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
 			});
 			menuView._toggle=true;
-		}else{
+		}else if(direction==null || direction=='left'){
 			menuView.animate({
 				left: -200,
 				duration: 200,
 				curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
 			});
 			iconHeader.animate({
-				left: -10,
+				left: 10,
 				duration: 200
 			});
 			menuView._toggle=false;
 		};
-	});
+		
+	}
 	
 	//Function to give functionality to menu items
 	function menuItemFunction(e){
@@ -191,7 +201,7 @@ function ApplicationWindow(osname){
 		});
 		//Move menu icon
 		iconHeader.animate({
-			left: -10,
+			left: 10,
 			duration: 200
 		});
 		//Change title to window and deactivate menu flag
